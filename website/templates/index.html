@@ -14,33 +14,33 @@
         <form method="post">
             <div class="input-group">
                 <label for="date-time">Date & Time:</label>
-                <input type="datetime-local" id="date-time" name="date-time" required>
+                <input type="datetime-local" id="date-time" name="date-time" required value="{{ request.form['date-time'] }}">
             </div>
 
             <!-- Weather Inputs -->
             <div class="input-group">
                 <label for="globalstraling">Globalstraling:</label>
-                <input type="number" id="globalstraling" name="globalstraling" placeholder="(Optional)">
+                <input type="number" id="globalstraling" name="globalstraling" placeholder="(Optional)" value="{{ request.form.get('globalstraling', '') }}">
             </div>
 
             <div class="input-group">
                 <label for="solskinstid">Solskinstid:</label>
-                <input type="number" id="solskinstid" name="solskinstid" placeholder="(Optional)">
+                <input type="number" id="solskinstid" name="solskinstid" placeholder="(Optional)" value="{{ request.form.get('solskinstid', '') }}">
             </div>
 
             <div class="input-group">
                 <label for="lufttemperatur">Lufttemperatur:</label>
-                <input type="number" id="lufttemperatur" name="lufttemperatur" placeholder="(Optional)">
+                <input type="number" id="lufttemperatur" name="lufttemperatur" placeholder="(Optional)" value="{{ request.form.get('lufttemperatur', '') }}">
             </div>
 
             <div class="input-group">
                 <label for="vindstyrke">Vindstyrke:</label>
-                <input type="number" id="vindsstyrke" name="vindsstyrke" placeholder="(Optional)">
+                <input type="number" id="vindstyrke" name="vindstyrke" placeholder="(Optional)" value="{{ request.form.get('vindstyrke', '') }}">
             </div>
 
             <div class="input-group">
                 <label for="vindkast">Vindkast:</label>
-                <input type="number" id="vindkast" name="vindkast" placeholder="(Optional)">
+                <input type="number" id="vindkast" name="vindkast" placeholder="(Optional)" value="{{ request.form.get('vindkast', '') }}">
             </div>
 
             <div class="input-group">
