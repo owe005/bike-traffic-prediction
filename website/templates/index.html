@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cycle Predictor</h1>
+
+        <form method="post">
+            <div class="input-group">
+                <label for="date-time">Date & Time:</label>
+                <input type="datetime-local" id="date-time" name="date-time" required>
+            </div>
+
+            <!-- Weather Inputs -->
+            <div class="input-group">
+                <label for="globalstraling">Globalstraling:</label>
+                <input type="number" id="globalstraling" name="globalstraling" placeholder="(Optional)">
+            </div>
+
+            <div class="input-group">
+                <label for="solskinstid">Solskinstid:</label>
+                <input type="number" id="solskinstid" name="solskinstid" placeholder="(Optional)">
+            </div>
+
+            <div class="input-group">
+                <label for="lufttemperatur">Lufttemperatur:</label>
+                <input type="number" id="lufttemperatur" name="lufttemperatur" placeholder="(Optional)">
+            </div>
+
+            <div class="input-group">
+                <label for="vindstyrke">Vindstyrke:</label>
+                <input type="number" id="vindsstyrke" name="vindsstyrke" placeholder="(Optional)">
+            </div>
+
+            <div class="input-group">
+                <label for="vindkast">Vindkast:</label>
+                <input type="number" id="vindkast" name="vindkast" placeholder="(Optional)">
+            </div>
+
+            <div class="input-group">
+                <button type="submit">Predict</button>
+            </div>
+        </form>
+        
+        {% if prediction %}
+        <div class="result">
+            Predicted number of cycles: {{ prediction }}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        <p>Made by</p>
+        <h2>Ole Kristian Westby</h2>
+        <p class="username">INF161 H23 | owe009@uib.no</p>
+    </div>
+
+</body>
+</html>
