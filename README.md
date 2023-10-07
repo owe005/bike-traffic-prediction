@@ -6,7 +6,7 @@ This is apart of my project for the INF161 Datascience course I am taking autumn
  *"The goal of this project is to apply all material learned in INF161 and successfully complete a data
 science project"*
 
-![alt text](webpage.png)
+<img src= "webpage.png" width="300">
 
 ## This project is split into 4 parts:
 
