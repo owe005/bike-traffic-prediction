@@ -7,6 +7,7 @@ import pandas as pd
 
 app = Flask(__name__)
 
+# Function to get for empty values field, will take median for the field if left empty.
 def get_or_default(form, field, default_value):
     value = form.get(field)
     return float(value) if value else default_value
@@ -25,17 +26,20 @@ def index():
         day_of_week = date_time.dayofweek
         hour = date_time.hour
 
+        # Running our function on every field, checking for if the user has inputted something, else median
         globalstraling = get_or_default(request.form, 'globalstraling', df['Globalstraling'].median())
         solskinstid = get_or_default(request.form, 'solskinstid', df['Solskinstid'].median())
         lufttemperatur = get_or_default(request.form, 'lufttemperatur', df['Lufttemperatur'].median())
         vindsstyrke = get_or_default(request.form, 'vindstyrke', df['Vindstyrke'].median())
         vindkast = get_or_default(request.form, 'vindkast', df['Vindkast'].median())
 
+        # Preparing information, turning into a dataframe and feeding it to model
         input_data = np.array([[globalstraling, solskinstid, lufttemperatur, vindsstyrke, vindkast, month, day_of_week, hour]])
         input_data = pd.DataFrame(input_data, columns=X_train.columns)
 
         print(input_data)
 
+        # Predict, round by 2 decimal points
         prediction = round(rf.predict(input_data)[0], 2)
 
     return render_template('index.html', prediction=prediction)    
