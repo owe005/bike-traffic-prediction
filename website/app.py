@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 from model import * # Importing our model and dataframe
 import numpy as np
 import pandas as pd
@@ -36,8 +36,7 @@ def index():
 
         print(input_data)
 
-        prediction = rf.predict(input_data)[0]
-            
+        prediction = round(rf.predict(input_data)[0], 2)
 
     return render_template('index.html', prediction=prediction)    
 
