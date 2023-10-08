@@ -40,3 +40,4 @@ rf_predict = rf.predict(X_val)
 
 # RMSE
 rf_rmse = np.sqrt(mean_squared_error(y_val, rf_predict))
+

@@ -18,8 +18,7 @@ cols = ['Datotid'] + [col for col in df if col != 'Datotid']
 df = df[cols]
 
 # Define missing data, replace with NaN
-missing_indicator = 9999.99
-df.replace(missing_indicator, np.nan, inplace=True)
+df.replace(9999.99, np.nan, inplace=True)
 
 # Fill all missing data with median
 for col in df.columns:

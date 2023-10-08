@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 import numpy as np
 
-dir = '../ready_data/ready_data.csv'
+dir = 'ready_data/ready_data.csv'
 
 # Load data into a dataframe
 df = pd.read_csv(dir)
