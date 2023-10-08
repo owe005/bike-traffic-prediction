@@ -3,7 +3,7 @@ import numpy as np
 from model import rf
 
 # Dir is for dataset in
-dir = "predictions/Florida_2023-01-01_2023-07-01_1688719120.csv"
+dir = "raw_data/weather_data/Florida_2023-01-01_2023-07-01_1688719120.csv"
 # Out is for predictions out
 out = "predictions/predictions.csv"
 
