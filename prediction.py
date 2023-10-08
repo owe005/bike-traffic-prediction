@@ -41,7 +41,20 @@ X_predict.drop(['Datotid'], axis=1, inplace=True)
 predicted_traffic = rf.predict(X_predict)
 
 # New col: predicted traffic
-df['PREDICTED TRAFFIC'] = predicted_traffic
+df['Prediksjon'] = predicted_traffic
+
+# Retain only datotid and prediksjon
+df = df[['Datotid', 'Prediksjon']]
+
+# Revert datotid to two cols, dato and tid.
+df['Dato'] = df['Datotid'].dt.date
+df['Tid'] = df['Datotid'].dt.time
+
+# Drop old datotid col
+df.drop(['Datotid'], axis=1, inplace=True)
+
+# Reorder cols
+df = df[['Dato', 'Tid', 'Prediksjon']]
 
 # Save to CSV
 df.to_csv(out, index=False)
