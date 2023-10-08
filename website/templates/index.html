@@ -39,6 +39,11 @@
             </div>
 
             <div class="input-group">
+                <label for="lufttrykk">Lufttrykk:</label>
+                <input type="number" id="lufttrykk" name="lufttrykk" placeholder="(Optional)" value="{{ request.form.get('lufttrykk', '') }}">
+            </div>
+
+            <div class="input-group">
                 <label for="vindkast">Vindkast:</label>
                 <input type="number" id="vindkast" name="vindkast" placeholder="(Optional)" value="{{ request.form.get('vindkast', '') }}">
             </div>

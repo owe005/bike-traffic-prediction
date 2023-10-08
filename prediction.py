@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from model import rf
+import holidays # Feature engineering for holidays
 
 # Dir is for dataset in
 dir = "raw_data/weather_data/Florida_2023-01-01_2023-07-01_1688719120.csv"
@@ -25,13 +26,29 @@ for col in df.columns:
     df[col].fillna(df[col].median(), inplace=True)
 
 # Columns we will feed into model for predictions
-interesting_cols = ['Datotid', 'Globalstraling', 'Solskinstid', 'Lufttemperatur', 'Vindstyrke', 'Vindkast']
+interesting_cols = ['Datotid', 'Globalstraling', 'Solskinstid', 'Lufttemperatur', 'Vindstyrke', "Lufttrykk", 'Vindkast']
 X_predict = df[interesting_cols]
 
 # Extract month, dayofweek and hour from datotid col
 X_predict['Month'] = X_predict['Datotid'].dt.month
 X_predict['DayOfWeek'] = X_predict['Datotid'].dt.dayofweek
 X_predict['Hour'] = X_predict['Datotid'].dt.hour
+
+# Feature engineering: Public holidays in Norway
+norway_holidays = holidays.Norway()
+X_predict['IsHoliday'] = X_predict['Datotid'].apply(lambda x: pd.to_datetime(x).date() in norway_holidays)
+
+# Feature engineering: Weekends, rushhour. I tested different options on "rushhour" and found this to be the best
+X_predict['IsWeekend'] = X_predict['Datotid'].dt.dayofweek >= 5
+X_predict['IsRushhour'] = X_predict['Hour'].isin([7, 8, 15, 16, 17])
+
+# Feature engineering: Seasons
+X_predict['Summer'] = X_predict['Month'].isin([6, 7, 8])
+X_predict['Winter'] = X_predict['Month'].isin([12, 1, 2])
+X_predict['Spring'] = X_predict['Month'].isin([3, 4, 5])
+X_predict['Autumn'] = X_predict['Month'].isin([9, 10, 11])
+
+X_predict['IsNight'] = X_predict['Hour'].isin([0, 1, 2, 3, 4, 5])
 
 # Drop datotid
 X_predict.drop(['Datotid'], axis=1, inplace=True)

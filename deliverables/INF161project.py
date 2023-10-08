@@ -22,6 +22,7 @@ from sklearn.metrics import mean_squared_error
 import numpy as np
 import pandas as pd
 import os
+import holidays # Feature engineering for holidays
 import matplotlib.pyplot as plt
 
 dir_weather = "raw_data/weather_data/"
@@ -30,17 +31,18 @@ dir_weather = "raw_data/weather_data/"
 files = [f for f in os.listdir(dir_weather) if f.endswith('.csv')]
 
 # Interesting columns
-columns = ["Dato", "Tid", "Globalstraling", "Solskinstid", "Lufttemperatur", "Vindstyrke", "Vindkast"]
+columns = ["Dato", "Tid", "Globalstraling", "Solskinstid", "Lufttemperatur", "Vindstyrke", "Lufttrykk", "Vindkast"] # Added "lufttrykk" later because it had a big difference
 
+# Individual dataframes, initialized as empty list
 dfs = []
 
-# Append every .csv file to list
+# For every .csv file, append to dataframe list
 for file in files:
     file_path = os.path.join(dir_weather, file)
     df = pd.read_csv(file_path, usecols=columns)
     dfs.append(df)
 
-# Merge dataframes
+# Merge all dataframes into one
 merged_weather_df = pd.concat(dfs, ignore_index=True)
 
 # Convert to pandas datetime format, and filter for 2015 + later
@@ -214,13 +216,30 @@ missing_data = df.isnull().sum()
 for col in missing_data.index[missing_data > 0]:
     df[col].fillna(df[col].median(), inplace=True)
 
-# Datetime format
 df['Datotid'] = pd.to_datetime(df['Datotid'])
 
 # Extracting time-related stuff
 df['Month'] = df['Datotid'].dt.month
 df['DayOfWeek'] = df['Datotid'].dt.dayofweek # Monday: 0, Tuesday: 1, ... , Sunday: 6.
 df['Hour'] = df['Datotid'].dt.hour
+
+# Feature engineering: Public holidays in Norway
+norway_holidays = holidays.Norway()
+df['IsHoliday'] = df['Datotid'].apply(lambda x: pd.to_datetime(x).date() in norway_holidays)
+
+# Feature engineering: Weekends, rushhour. I tested different options on "rushhour" and found this to be the best
+df['IsWeekend'] = df['Datotid'].dt.dayofweek >= 5
+df['IsRushhour'] = df['Hour'].isin([7, 8, 15, 16, 17])
+
+df['IsNight'] = df['Hour'].isin([0, 1, 2, 3, 4, 5])
+
+# Feature engineering: Seasons
+df['Summer'] = df['Month'].isin([6, 7, 8])
+df['Winter'] = df['Month'].isin([12, 1, 2])
+df['Spring'] = df['Month'].isin([3, 4, 5])
+df['Autumn'] = df['Month'].isin([9, 10, 11])
+
+df.reset_index(drop=True, inplace=True)
 
 # X: all weather information, y: only trafikkmengde.
 X = df.drop(columns=['Datotid', 'Trafikkmengde'])
@@ -304,7 +323,7 @@ kn_rmse = np.sqrt(mean_squared_error(y_val, y_predict)) # ~49,7 RMSE
 ## RandomForestRegressor
 
 # Initialize the model and train it
-rf = RandomForestRegressor(n_estimators=10, random_state=1) # With 100 estimators, the RMSE is 26.1455 instead, but it took a minute to run. # 1000: 25,89
+rf = RandomForestRegressor(n_estimators=200, max_depth=20, random_state=1)
 
 rf.fit(X_train, y_train)
 
@@ -312,7 +331,7 @@ rf.fit(X_train, y_train)
 rf_predict = rf.predict(X_val)
 
 # RMSE
-rf_rmse = np.sqrt(mean_squared_error(y_val, rf_predict)) # ~27.3 RMSE
+rf_rmse = np.sqrt(mean_squared_error(y_val, rf_predict)) # ~22.65 RMSE
 
 ## Model found, now GridSearchCV.
 
@@ -384,13 +403,29 @@ for col in df.columns:
     df[col].fillna(df[col].median(), inplace=True)
 
 # Columns we will feed into model for predictions
-interesting_cols = ['Datotid', 'Globalstraling', 'Solskinstid', 'Lufttemperatur', 'Vindstyrke', 'Vindkast']
+interesting_cols = ['Datotid', 'Globalstraling', 'Solskinstid', 'Lufttemperatur', 'Vindstyrke', "Lufttrykk", 'Vindkast']
 X_predict = df[interesting_cols]
 
 # Extract month, dayofweek and hour from datotid col
 X_predict['Month'] = X_predict['Datotid'].dt.month
 X_predict['DayOfWeek'] = X_predict['Datotid'].dt.dayofweek
 X_predict['Hour'] = X_predict['Datotid'].dt.hour
+
+# Feature engineering: Public holidays in Norway
+norway_holidays = holidays.Norway()
+X_predict['IsHoliday'] = X_predict['Datotid'].apply(lambda x: pd.to_datetime(x).date() in norway_holidays)
+
+# Feature engineering: Weekends, rushhour. I tested different options on "rushhour" and found this to be the best
+X_predict['IsWeekend'] = X_predict['Datotid'].dt.dayofweek >= 5
+X_predict['IsRushhour'] = X_predict['Hour'].isin([7, 8, 15, 16, 17])
+
+X_predict['IsNight'] = X_predict['Hour'].isin([0, 1, 2, 3, 4, 5])
+
+# Feature engineering: Seasons
+X_predict['Summer'] = X_predict['Month'].isin([6, 7, 8])
+X_predict['Winter'] = X_predict['Month'].isin([12, 1, 2])
+X_predict['Spring'] = X_predict['Month'].isin([3, 4, 5])
+X_predict['Autumn'] = X_predict['Month'].isin([9, 10, 11])
 
 # Drop datotid
 X_predict.drop(['Datotid'], axis=1, inplace=True)
