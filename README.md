@@ -31,7 +31,7 @@ science project"*
 - website/static/*: css styling
 - ready_data/*: datasets prepared for model training after preparation.ipynb steps.
 - raw_data/*: raw datasets, weather and traffic data.
-- predictions/*: weather data for 2023 and the predicted traffic, all in predictions.csv.
+- predictions/*: the predicted traffic, all in predictions.csv.
 - deliverables/*: submission materials
 
 ## Getting Started
