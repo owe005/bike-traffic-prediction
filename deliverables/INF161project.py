@@ -21,6 +21,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 import numpy as np
 import pandas as pd
+import seaborn as sns
 import os
 import holidays # Feature engineering for holidays
 import matplotlib.pyplot as plt
@@ -139,35 +140,21 @@ clean_ready_df = ready_df.dropna(subset=['Vindstyrke', 'Trafikkmengde'])
 figures_dir = 'figures/'
 
 ## Wind speed vs. Traffic (These are saved in /figures/)
-
 # Setting up the figure and axis
 fig, ax = plt.subplots(figsize=(10, 6))
-
-# Scatter
 ax.scatter(clean_ready_df['Vindstyrke'], clean_ready_df['Trafikkmengde'], s=3)
-
-# Title and labels
 ax.set_title('Wind Speed vs. Traffic')
 ax.set_xlabel('Wind Speed')
 ax.set_ylabel('Traffic Volume')
-
-# Show plot
 plt.savefig(figures_dir + 'windspeedvstraffic.png')
 
 ## Temperature vs. Traffic
-
 # Create plot
 fig, ax = plt.subplots(figsize=(10, 6))
-
-# Scatter
 ax.scatter(clean_ready_df['Lufttemperatur'], clean_ready_df['Trafikkmengde'], s=3)
-
-# Labels
 ax.set_title('Temperature vs. Traffic')
 ax.set_xlabel('Temperature (°C)')
 ax.set_ylabel('Traffic Volume')
-
-# Show
 plt.savefig(figures_dir + 'tempvstraffic.png')
 
 ## Traffic vs. Weekdays
@@ -190,18 +177,51 @@ avg_daily_traffic_per_weekday = daily_traffic.groupby('Weekday')['Trafikkmengde'
 # Create plot
 fig, ax = plt.subplots(figsize=(10, 6))
 avg_daily_traffic_per_weekday.plot(kind='bar', ax=ax)
-
-# Titles, labels
 ax.set_title('Traffic vs Weekday')
 ax.set_xlabel('Weekday')
 ax.set_ylabel('Average Daily Traffic Volume')
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
-
-# Tight plot and show
 plt.tight_layout()
 plt.savefig(figures_dir + 'trafficvsweekdays.png')
 
+## Lufttrykk vs. Trafikkmengde
+plt.figure(figsize=(10, 6))
+plt.scatter(clean_ready_df['Lufttrykk'], clean_ready_df['Trafikkmengde'], alpha=0.5)
+plt.title('Lufttrykk vs. Trafikkmengde')
+plt.xlabel('Lufttrykk')
+plt.ylabel('Trafikkmengde')
+plt.grid(True)
+plt.savefig(figures_dir + 'lufttrykkvstraffic.png')
 
+## Vindkast vs. Trafikkmengde
+plt.figure(figsize=(10, 6))
+plt.scatter(clean_ready_df['Vindkast'], clean_ready_df['Trafikkmengde'], alpha=0.5)
+plt.title('Vindkast vs. Trafikkmengde')
+plt.xlabel('Vindkast')
+plt.ylabel('Trafikkmengde')
+plt.grid(True)
+plt.savefig(figures_dir + 'vindkastvstraffic.png')
+
+## 2017 traffic (looking at SykkelVM)
+df_2017 = clean_ready_df[clean_ready_df['Datotid'].dt.year == 2017]
+daily_traffic_2017 = df_2017.resample('D', on='Datotid')['Trafikkmengde'].sum()
+plt.figure(figsize=(15, 7))
+daily_traffic_2017.plot()
+plt.title('Daily Traffic for 2017')
+plt.xlabel('Date')
+plt.ylabel('Trafikkmengde')
+plt.grid(True)
+plt.tight_layout()
+plt.savefig(figures_dir + 'dailytraffic2017.png')
+
+## Correlation matrix
+correlation = ready_df.corr()
+correlation = ready_df.drop(columns=['Datotid']).corr()
+numeric_df = ready_df.select_dtypes(include=['float64', 'int64'])
+correlation = numeric_df.corr()
+plt.figure(figsize=(10, 8))
+sns.heatmap(correlation, annot=True, cmap='coolwarm')
+plt.savefig(figures_dir + 'correlationmatrix.png')
 
 ### Part 02, data modelling
 

@@ -5,7 +5,7 @@ import pandas as pd
 import holidays # Feature engineering for holidays
 import numpy as np
 
-dir = 'ready_data/ready_data.csv'
+dir = 'data/ready_data/ready_data.csv'
 
 # Load data into a dataframe
 df = pd.read_csv(dir)

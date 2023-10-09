@@ -4,9 +4,9 @@ from model import rf
 import holidays # Feature engineering for holidays
 
 # Dir is for dataset in
-dir = "raw_data/weather_data/Florida_2023-01-01_2023-07-01_1688719120.csv"
+dir = "data/raw_data/weather_data/Florida_2023-01-01_2023-07-01_1688719120.csv"
 # Out is for predictions out
-out = "predictions/predictions.csv"
+out = "data/predictions/predictions.csv"
 
 df = pd.read_csv(dir)
 
@@ -26,7 +26,7 @@ for col in df.columns:
     df[col].fillna(df[col].median(), inplace=True)
 
 # Columns we will feed into model for predictions
-interesting_cols = ['Datotid', 'Globalstraling', 'Solskinstid', 'Lufttemperatur', 'Vindstyrke', "Lufttrykk", 'Vindkast']
+interesting_cols = ['Datotid', 'Globalstraling', 'Solskinstid', 'Lufttemperatur', 'Vindstyrke', "Lufttrykk"]
 X_predict = df[interesting_cols]
 
 # Extract month, dayofweek and hour from datotid col

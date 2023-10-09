@@ -48,7 +48,7 @@ y = df['Trafikkmengde']
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.5, random_state=1)
 
 # Initialize the model and train it
-rf = RandomForestRegressor(n_estimators=200, max_depth=20, random_state=1)
+rf = RandomForestRegressor(n_estimators=50, max_depth=20, random_state=1) # Just because I want it to start quickly, I have lowered the params, accuracy still high
 
 rf.fit(X_train, y_train)
 

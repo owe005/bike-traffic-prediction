@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 # In this script we've already determined the best hyperparameters for RandomForestRegressor using GridSearchCV which was done in model.ipynb
+# It takes a minute to start up, so be patient :)
 
 app = Flask(__name__)
 
@@ -40,10 +41,9 @@ def index():
         lufttemperatur = get_or_default(request.form, 'lufttemperatur', df['Lufttemperatur'].median())
         vindsstyrke = get_or_default(request.form, 'vindstyrke', df['Vindstyrke'].median())
         lufttrykk = get_or_default(request.form, 'lufttrykk', df['Lufttrykk'].median())
-        vindkast = get_or_default(request.form, 'vindkast', df['Vindkast'].median())
 
         # Preparing information, turning into a dataframe and feeding it to model
-        input_data = np.array([[globalstraling, solskinstid, lufttemperatur, vindsstyrke, lufttrykk, vindkast, month, day_of_week, hour, is_holiday, is_weekend, is_rushhour, is_night, summer, winter, spring, autumn]])        
+        input_data = np.array([[globalstraling, solskinstid, lufttemperatur, vindsstyrke, lufttrykk, month, day_of_week, hour, is_holiday, is_weekend, is_rushhour, is_night, summer, winter, spring, autumn]])        
         input_data = pd.DataFrame(input_data, columns=X_train.columns)
 
         print(input_data)
