@@ -47,6 +47,7 @@ X = df.drop(columns=['Datotid', 'Trafikkmengde'])
 y = df['Trafikkmengde']
 
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.5, random_state=1)
+# TODO: Test data
 
 # Initialize the model and train it
 rf = RandomForestRegressor(n_estimators=200, max_depth=20, random_state=1)
