@@ -265,7 +265,7 @@ df.reset_index(drop=True, inplace=True)
 X = df.drop(columns=['Datotid', 'Trafikkmengde'])
 y = df['Trafikkmengde']
 
-X_temp, X_test, y_temp, y_test = train_test_split(X, y, test_size=0.7, random_state=1)
+X_temp, X_test, y_temp, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
 
 # Split the training+validation data again to get separate training and validation datasets
 X_train, X_val, y_train, y_val = train_test_split(X_temp, y_temp, test_size=0.5, random_state=1)

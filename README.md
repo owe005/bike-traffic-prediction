@@ -1,6 +1,8 @@
 # **INF161 - Bike Traffic Prediction**
 #### *Ole Kristian Westby | owe009@uib.no | H23*
 
+TODO: Fix test data
+
 This is apart of my project for the INF161 Datascience course I am taking autumn semester 2023. From the assignment description:
 
  *"The goal of this project is to apply all material learned in INF161 and successfully complete a data
